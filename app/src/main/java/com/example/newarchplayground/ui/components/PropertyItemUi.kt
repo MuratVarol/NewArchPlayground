@@ -53,25 +53,33 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun PropertyListUi() {
     val viewModel = hiltViewModel<MainViewModel>()
+    // collectAsState same as toObservable everytime data change; UI will be updated
     val propertyList by viewModel.propertyList.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    //remember: if we will update Composable UI value later: need to cascade it with "remember"
+    // to notify UI after value changed
     val loadingList  = remember {
         mutableStateListOf<String>().apply {
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
-            add("dadas")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
+            add("Loading")
         }
     }
+    //reaching context in Composable
     val context = LocalContext.current
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+        //creating reference for constraint layout
         val (loading) = createRefs()
         val (fab) = createRefs()
+
+        //showing progressbar with visibility animation
         AnimatedVisibility(visible = false/**isLoading.value*/, modifier = Modifier
             .constrainAs(loading) {
                 centerVerticallyTo(parent)
@@ -83,6 +91,7 @@ fun PropertyListUi() {
             CircularProgressIndicator()
         }
 
+        //first loading items for shimmer Effect
         LazyColumn(
             state = rememberLazyListState(),
             modifier = Modifier
@@ -90,15 +99,12 @@ fun PropertyListUi() {
                 .padding(top = 8.dp),
         ) {
             items(loadingList){
-                PropertyListItem(property = PropertyUiModel(
-                    "dsadasd",
-                    "dsadasd",
-                    "dsadasd",
-                    "dsadasd"
-                ), isLoading)
+                PropertyListItem(property = PropertyUiModel("","","",""), isLoading)
             }
         }
 
+        //Accompanist has componnets such as SwipeRefresh or CardView
+        // It is same as previous Anko of Kotlin but developed by Google
         val swipeToRefreshState = rememberSwipeRefreshState(isLoading)
         SwipeRefresh(
             state = swipeToRefreshState,
@@ -189,7 +195,7 @@ private fun ConstraintLayoutScope.addImage(url: String, isLoading: Boolean): Con
                 visible = isLoading,
                 color = Color.Gray,
                 shape = RoundedCornerShape(90.dp),
-                highlight = PlaceholderHighlight.shimmer(
+                highlight = PlaceholderHighlight.fade(
                     highlightColor = Color.White,
                 )
             )
@@ -201,7 +207,7 @@ private fun ConstraintLayoutScope.addImage(url: String, isLoading: Boolean): Con
 private fun ConstraintLayoutScope.addTitle(
     image: ConstrainedLayoutReference,
     titleText: String?,
-    isLoading: Boolean
+    isLoading: Boolean,
 ): ConstrainedLayoutReference {
     val title = createRef()
     Text(

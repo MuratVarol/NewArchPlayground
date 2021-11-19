@@ -14,8 +14,10 @@ class MainViewModel @Inject constructor(
     private val propertyListUseCase: GetPropertyListUseCase
 ) : ViewModel() {
 
-    val properties = MutableLiveData<MutableList<PropertyUiModel>>()
-
+    // same as LiveData's LiveData and MutableLiveData
+    // it is about encapsulating
+    // Composable supports StateFlow like Databinding's LiveData
+    // we need MutableStateFlow to update ui after service updated list
     private val _list = MutableStateFlow(emptyList<PropertyUiModel>())
     val propertyList: StateFlow<List<PropertyUiModel>> get() = _list
 
@@ -23,15 +25,14 @@ class MainViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> get() = _isLoading
 
     init {
-        //fillDummyItems()
         getProperties()
     }
 
     fun reverseList(){
         //caution: works only with immutable list, it is not working if it is a mutableList
         val list : MutableList<PropertyUiModel> = _list.value.toMutableList()
-        //list.removeAt(1)
-        list.add(1,PropertyUiModel("","Property X","This is dynamically added\nrow, ","Deneme"))
+        list.removeAt(1)
+        list.add(1,PropertyUiModel("","Property X","This is dynamically added\nrow, ","https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"))
         _list.value = list.reversed()
     }
 
@@ -45,19 +46,5 @@ class MainViewModel @Inject constructor(
             .flowOn(Dispatchers.IO)
             .catch { e -> e.printStackTrace() }
             .launchIn(viewModelScope)
-    }
-
-    private fun fillDummyItems() {
-        val propertyItemList = mutableListOf<PropertyUiModel>()
-        for (i in 1..24){
-            val propertyUiModel = PropertyUiModel(
-                "$i",
-                "Property $i",
-                "Property $i Description\nThis is a detailed description\nabout property in Dubai",
-                "https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"
-            )
-            propertyItemList.add(propertyUiModel)
-        }
-        properties.postValue(propertyItemList)
     }
 }
