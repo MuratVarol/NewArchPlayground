@@ -1,6 +1,6 @@
 package com.example.newarchplayground.di
 
-import com.example.newarchplayground.data.remote.PropertyRepository
+import com.example.newarchplayground.data.repository.PropertyRepository
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
 import dagger.Module
 import dagger.Provides

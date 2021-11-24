@@ -1,7 +1,7 @@
-
 package com.example.newarchplayground.data.remote
 
 import com.example.newarchplayground.data.PropertyResponseModel
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface PropertyApi {
@@ -11,6 +11,6 @@ interface PropertyApi {
     }
 
     @GET("sample_property_list.json")
-    suspend fun getProperties(): PropertyResponseModel
+    suspend fun getProperties(): Response<PropertyResponseModel>
 
 }
