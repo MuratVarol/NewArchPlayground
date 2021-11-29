@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 object DataStorePreferenceConstants {
     val NAME_KEY = stringPreferencesKey("NAME_KEY")
 
-    val BOOLEAN_KEY = booleanPreferencesKey("BOOLEAN_KEY")
-    val INT_KEY = intPreferencesKey("INT_KEY")
+    val HAS_ONBOARDING_SHOWN_KEY = booleanPreferencesKey("BOOLEAN_KEY")
+    val PHONE_KEY = intPreferencesKey("INT_KEY")
     val STRING_KEY = stringPreferencesKey("STRING_KEY")
     val LONG_KEY = longPreferencesKey("LONG_KEY")
 }
