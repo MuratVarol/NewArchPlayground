@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 open class PropertyRepository @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteRemoteDataSource
-) : IFlowRequestWrapper by FlowRequestWrapperImpl(),
+) : IApiResultFlowWrapper by ApiResultFlowWrapperImpl(),
     ILiveDataRequestWrapper by LiveDataRequestWrapperImpl() {
 
     fun getProperties(): Flow<ApiResult<PropertyResponseModel>> = flowResult {

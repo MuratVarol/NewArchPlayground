@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
-interface IFlowRequestWrapper {
+interface IApiResultFlowWrapper {
     fun <T> flowResult(networkCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>>
 }
 
-class FlowRequestWrapperImpl : IFlowRequestWrapper {
+class ApiResultFlowWrapperImpl : IApiResultFlowWrapper {
     override fun <T> flowResult(networkCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>> =
         flow {
             emit(ApiResult.Loading)

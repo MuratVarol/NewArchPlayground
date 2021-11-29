@@ -6,10 +6,10 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.newarchplayground.data.common.ApiResult
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
+import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
@@ -32,26 +32,42 @@ class PreferencesDataSource @Inject constructor(
         }
     )
 
-    suspend fun <T> getPreference(key: Preferences.Key<T>, defaultValue: T? = null): Flow<T?> =
-        context.dataStore.data.catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
+    suspend fun <T> getPreference(key: Preferences.Key<T>, defaultValue: T? = null): Flow<ApiResult<T?>> =
+        context.dataStore.data
+            .onStart { ApiResult.Loading }
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
             }
-        }.map { preferences ->
-            preferences[key] ?: defaultValue
-        }
+            .map { preferences ->
+                ApiResult.Success(preferences[key] ?: defaultValue)
+            }
 
-    suspend fun <T> editPreference(key: Preferences.Key<T>, value: T) {
+    suspend fun <T> editPreference(key: Preferences.Key<T>, value: T) = wrapResult<Unit> {
         context.dataStore.edit { it[key] = value }
     }
 
-    suspend fun <T> removePreference(key: Preferences.Key<T>) {
+    suspend fun <T> removePreference(key: Preferences.Key<T>) = wrapResult<Unit> {
         context.dataStore.edit { it.remove(key) }
     }
 
-    suspend fun clearAllPreference() {
+    suspend fun clearAllPreference() = wrapResult<Unit> {
         context.dataStore.edit { it.clear() }
+    }
+
+    private fun <T> wrapResult(call: suspend () -> T): Flow<ApiResult<T>> = flow {
+        emit(ApiResult.Loading)
+
+        val result = try {
+            ApiResult.Success(call())
+        } catch (e: IOException) {
+            Timber.e(e)
+            ApiResult.Error(e.message ?: "", e)
+        }
+
+        emit(result)
     }
 }
