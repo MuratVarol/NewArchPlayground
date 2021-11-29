@@ -7,6 +7,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.newarchplayground.data.common.ApiResult
+import com.example.newarchplayground.data.repository.ApiResultFlowWrapperImpl
+import com.example.newarchplayground.data.repository.IApiResultFlowWrapper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -21,7 +23,8 @@ class PreferencesDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     preferenceName: String,
     migrationPreferenceName: String? = null,
-) {
+) : IApiResultFlowWrapper by ApiResultFlowWrapperImpl() {
+
     private val Context.dataStore by preferencesDataStore(
         name = preferenceName,
         produceMigrations = { context ->
@@ -32,9 +35,13 @@ class PreferencesDataSource @Inject constructor(
         }
     )
 
-    suspend fun <T> getPreference(key: Preferences.Key<T>, defaultValue: T? = null): Flow<ApiResult<T?>> =
-        context.dataStore.data
-            .onStart { ApiResult.Loading }
+    suspend fun <T> getPreference(
+        key: Preferences.Key<T>,
+        defaultValue: T? = null
+    ): Flow<ApiResult<T?>> = flow {
+        emit(ApiResult.Loading)
+
+        val dataFlow = context.dataStore.data
             .catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())
@@ -46,28 +53,29 @@ class PreferencesDataSource @Inject constructor(
                 ApiResult.Success(preferences[key] ?: defaultValue)
             }
 
-    suspend fun <T> editPreference(key: Preferences.Key<T>, value: T) = wrapResult<Unit> {
+        emitAll(dataFlow)
+    }
+
+
+    suspend fun <T> editPreference(key: Preferences.Key<T>, value: T) = editorApiResultWrapper {
         context.dataStore.edit { it[key] = value }
     }
 
-    suspend fun <T> removePreference(key: Preferences.Key<T>) = wrapResult<Unit> {
+    suspend fun <T> removePreference(key: Preferences.Key<T>) = editorApiResultWrapper {
         context.dataStore.edit { it.remove(key) }
     }
 
-    suspend fun clearAllPreference() = wrapResult<Unit> {
+    suspend fun clearAllPreference() = editorApiResultWrapper {
         context.dataStore.edit { it.clear() }
     }
 
-    private fun <T> wrapResult(call: suspend () -> T): Flow<ApiResult<T>> = flow {
-        emit(ApiResult.Loading)
-
-        val result = try {
-            ApiResult.Success(call())
-        } catch (e: IOException) {
-            Timber.e(e)
-            ApiResult.Error(e.message ?: "", e)
+    private suspend fun <T> editorApiResultWrapper(function: suspend () -> T): Flow<ApiResult<T>> =
+        flowResult {
+            try {
+                ApiResult.Success(function.invoke())
+            } catch (e: IOException) {
+                Timber.e(e)
+                ApiResult.Error(e.message ?: "", e)
+            }
         }
-
-        emit(result)
-    }
 }

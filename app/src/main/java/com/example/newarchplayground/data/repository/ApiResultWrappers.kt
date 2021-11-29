@@ -5,22 +5,20 @@ import com.example.newarchplayground.data.common.ApiResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flowOn
 
 interface IApiResultFlowWrapper {
-    fun <T> flowResult(networkCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>>
+    fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>>
 }
 
 class ApiResultFlowWrapperImpl : IApiResultFlowWrapper {
-    override fun <T> flowResult(networkCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>> =
+    override fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>> =
         flow {
             emit(ApiResult.Loading)
 
-            withContext(Dispatchers.IO) {
-                val responseStatus = networkCall.invoke()
-                emit(responseStatus)
-            }
-        }
+            val responseStatus = dataCall.invoke()
+            emit(responseStatus)
+        }.flowOn(Dispatchers.IO)
 }
 
 

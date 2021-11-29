@@ -5,5 +5,5 @@ import com.example.newarchplayground.data.repository.PropertyRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetPropertyListUseCase(private val repo: PropertyRepository) {
-    fun getProperties(): Flow<List<PropertyUiModel>> = repo.getProperties()
+//    fun getProperties(): Flow<List<PropertyUiModel>> = repo.getProperties()
 }

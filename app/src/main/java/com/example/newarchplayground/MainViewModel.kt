@@ -38,13 +38,13 @@ class MainViewModel @Inject constructor(
 
     fun getProperties(){
         _isLoading.value = true
-        propertyListUseCase.getProperties()
-            .onEach {
-                _list.value = it
-                _isLoading.value = false
-            }
-            .flowOn(Dispatchers.IO)
-            .catch { e -> e.printStackTrace() }
-            .launchIn(viewModelScope)
+//        propertyListUseCase.getProperties()
+//            .onEach {
+//                _list.value = it
+//                _isLoading.value = false
+//            }
+//            .flowOn(Dispatchers.IO)
+//            .catch { e -> e.printStackTrace() }
+//            .launchIn(viewModelScope)
     }
 }
