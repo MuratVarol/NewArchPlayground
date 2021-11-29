@@ -1,7 +1,8 @@
 package com.example.newarchplayground.di
 
-import com.example.newarchplayground.data.remote.PropertyApi
-import com.example.newarchplayground.data.remote.PropertyRepository
+import com.example.newarchplayground.data.PropertyRepository
+import com.example.newarchplayground.data.remote.datasource.PropertyRemoteDataSource
+import com.example.newarchplayground.data.repository.PropertyRepositoryImp
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,6 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideCharactersRepository(api: PropertyApi): PropertyRepository =
-        PropertyRepository(api)
+    fun providePropertyRepository(dataSource: PropertyRemoteDataSource): PropertyRepository =
+        PropertyRepositoryImp(dataSource)
 }

@@ -3,6 +3,8 @@ package com.example.newarchplayground
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newarchplayground.data.common.ApiResult
+import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -37,14 +39,29 @@ class MainViewModel @Inject constructor(
     }
 
     fun getProperties(){
-        _isLoading.value = true
         propertyListUseCase.getProperties()
-            .onEach {
-                _list.value = it
-                _isLoading.value = false
+            .onEach { data ->
+                data.either(::handleError, ::handleSuccess, ::showLoading)
             }
-            .flowOn(Dispatchers.IO)
             .catch { e -> e.printStackTrace() }
             .launchIn(viewModelScope)
+    }
+
+    private fun showLoading() {
+        // handle this on base class
+
+        _isLoading.value = true
+    }
+
+    private fun handleSuccess(list: List<PropertyUiModel>?) {
+        list?.let {
+            _list.value = it
+        }
+        _isLoading.value = false
+    }
+
+    private fun handleError(failure: Failure) {
+
+        _isLoading.value = false
     }
 }

@@ -4,6 +4,10 @@ package com.example.newarchplayground.di
 import android.content.Context
 import com.example.newarchplayground.BuildConfig
 import com.example.newarchplayground.data.remote.PropertyApi
+import com.example.newarchplayground.data.remote.SomeOtherApi
+import com.example.newarchplayground.util.AppConstants.BASE_URL
+import com.squareup.moshi.Moshi
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +20,9 @@ import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -59,6 +65,23 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun providePropertyApi(retrofit: Retrofit.Builder): PropertyApi =
-        retrofit.baseUrl(PropertyApi.BASE_URL).build().create(PropertyApi::class.java)
+    fun provideRetrofit(client: Lazy<OkHttpClient>, moshi: Moshi): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            //.addConverterFactory(ResponseConverterFactory())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .callFactory { client.get().newCall(it) }
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun providePropertyApi(retrofit: Retrofit): PropertyApi =
+        retrofit.create(PropertyApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideSomeOtherApi(retrofit: Retrofit): SomeOtherApi =
+        retrofit.create(SomeOtherApi::class.java)
+
 }
