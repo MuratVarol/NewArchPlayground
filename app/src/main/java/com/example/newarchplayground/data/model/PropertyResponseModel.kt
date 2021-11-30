@@ -1,4 +1,4 @@
-package com.example.newarchplayground.data
+package com.example.newarchplayground.data.model
 
 data class PropertyResponseModel(
     val properties : List<PropertyItemResponseModel>,

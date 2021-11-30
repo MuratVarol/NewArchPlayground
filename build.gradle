@@ -5,10 +5,13 @@ task clean(type: Delete) {
 }
 
 buildscript{
-    ext.kotlin_version = '1.5.21'
+    ext.kotlin_version = '1.5.31'
     ext {
-        compose_version = '1.0.1'
-        navigation_compose = '1.0.0-alpha03'
+        compose_version = '1.0.5'
+        navigation_compose = '1.0.0-beta01'
+        room = '2.3.0'
+        moshi = '1.9.3'
+        moshi_lazy = '2.1'
     }
     repositories {
         gradlePluginPortal()
@@ -18,9 +21,8 @@ buildscript{
         maven { url 'https://maven.fabric.io/public' }
     }
 
-
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.3"
+        classpath 'com.android.tools.build:gradle:7.0.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlin_version}"
         classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
     }
