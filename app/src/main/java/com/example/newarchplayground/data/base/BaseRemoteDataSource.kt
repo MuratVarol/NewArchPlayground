@@ -1,15 +1,15 @@
 package com.example.newarchplayground.data.base
 
-import com.example.newarchplayground.data.common.ApiResult
+import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.util.Failure
 
 open class BaseRemoteDataSource {
 
-    protected suspend fun <S> fetchResult(call: suspend () -> S): ApiResult<Failure, S> {
+    protected suspend fun <S> fetchResult(call: suspend () -> S): DataResult<Failure, S> {
         return try {
-            ApiResult.Success(call())
+            DataResult.Success(call())
         } catch (exception: Exception) {
-            ApiResult.Error(toFailure(exception))
+            DataResult.Error(toFailure(exception))
         }
     }
 

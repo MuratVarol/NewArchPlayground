@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class PropertyRepository @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteRemoteDataSource
-) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate(){
+) : IResultFlowWrapper by ResultFlowWrapperDelegate(){
 
     fun getProperties() = flowResult {
         propertyRemoteDataSource.getProperties()

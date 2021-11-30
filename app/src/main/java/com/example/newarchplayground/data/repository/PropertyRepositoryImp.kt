@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class PropertyRepositoryImp @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteDataSource
-) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate(), PropertyRepository {
+) : IResultFlowWrapper by ResultFlowWrapperDelegate(), PropertyRepository {
 
     override fun getProperties() = flowResult {
         propertyRemoteDataSource.getProperties().transform { response -> response?.properties?.map { it.toUiModel() } }

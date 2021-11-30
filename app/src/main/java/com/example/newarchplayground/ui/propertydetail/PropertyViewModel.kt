@@ -3,13 +3,15 @@ package com.example.newarchplayground.ui.propertydetail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newarchplayground.data.common.ApiResult
+import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.local.preferences.PreferencesRepository
 import com.example.newarchplayground.data.repository.PropertyRepository
 import com.example.newarchplayground.data.util.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,37 +24,41 @@ class PropertyViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getProperties()
-            preferencesRepository.editName("burak").collect {
+        }
+
+        preferencesRepository.editName("burak")
+            .onEach {
                 Log.d("PropertyViewModel: edit: ", it::class.simpleName.toString())
             }
-            preferencesRepository.getPrefName()
-                .onEach { data ->
-                    Log.d("PropertyViewModel: onEach: ",data.toString())
-                    data.either(::handleError, ::handleSuccess, ::showLoading)
-                }
-                .catch { e -> e.printStackTrace() }
-                .launchIn(viewModelScope)
-        }
+            .launchIn(viewModelScope)
+
+        preferencesRepository.getPrefName()
+            .onEach { data ->
+                Log.d("PropertyViewModel: onEach: ", data.toString())
+                data.either(::handleError, ::handleSuccess, ::showLoading)
+            }
+            .catch { e -> e.printStackTrace() }
+            .launchIn(viewModelScope)
     }
 
     private fun showLoading() {
-        Log.d("PropertyViewModel: collect: Loading","")
+        Log.d("PropertyViewModel: Loading", "")
     }
 
     private fun handleSuccess(s: String?) {
-        Log.d("PropertyViewModel: collect: Success","$s")
+        Log.d("PropertyViewModel: Success", "$s")
     }
 
     private fun handleError(failure: Failure) {
-        Log.d("PropertyViewModel: collect: Failure","")
+        Log.d("PropertyViewModel: Failure", "")
     }
 
     private suspend fun getProperties() {
-        propertyRepository.getProperties().flowOn(Dispatchers.Main).collect {
+        propertyRepository.getProperties().collect {
             when (it) {
-                is ApiResult.Success -> {}
-                is ApiResult.Error -> {}
-                ApiResult.Loading -> {}
+                is DataResult.Success -> {}
+                is DataResult.Error -> {}
+                DataResult.Loading -> {}
             }
         }
     }

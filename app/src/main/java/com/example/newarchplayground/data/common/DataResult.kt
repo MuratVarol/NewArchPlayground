@@ -1,14 +1,14 @@
 package com.example.newarchplayground.data.common
 
 
-sealed class ApiResult<out E, out S> {
-    /** * Represents the left side of [ApiResult] class which by convention is a "Failure". */
-    data class Error<out E>(val a: E) : ApiResult<E, Nothing>()
+sealed class DataResult<out E, out S> {
+    /** * Represents the left side of [DataResult] class which by convention is a "Failure". */
+    data class Error<out E>(val a: E) : DataResult<E, Nothing>()
 
-    /** * Represents the right side of [ApiResult] class which by convention is a "Success". */
-    data class Success<out R>(val b: R) : ApiResult<Nothing, R>()
+    /** * Represents the right side of [DataResult] class which by convention is a "Success". */
+    data class Success<out R>(val b: R) : DataResult<Nothing, R>()
 
-    object Loading : ApiResult<Nothing, Nothing>()
+    object Loading : DataResult<Nothing, Nothing>()
 
     val isSuccess get() = this is Success<S>
     val isError get() = this is Error<E>
@@ -31,7 +31,7 @@ sealed class ApiResult<out E, out S> {
             is Loading -> fnLoading
         }
 
-    fun <T> transform(fnR: (S) -> T): ApiResult<E, T> {
+    fun <T> transform(fnR: (S) -> T): DataResult<E, T> {
         return when (this) {
             is Error -> this
             is Success -> Success(fnR(b))
@@ -66,11 +66,11 @@ fun <A, B, C> ((A) -> B).c(f: (B) -> C): (A) -> C = {
     f(this(it))
 }
 
-fun <T, L, R> ApiResult<L, R>.flatMap(fn: (R) -> ApiResult<L, T>): ApiResult<L, T> =
+fun <T, L, R> DataResult<L, R>.flatMap(fn: (R) -> DataResult<L, T>): DataResult<L, T> =
     when (this) {
-        is ApiResult.Error -> ApiResult.Error(a)
-        is ApiResult.Success -> fn(b)
-        is ApiResult.Loading -> ApiResult.Loading
+        is DataResult.Error -> DataResult.Error(a)
+        is DataResult.Success -> fn(b)
+        is DataResult.Loading -> DataResult.Loading
     }
 
-fun <T, L, R> ApiResult<L, R>.map(fn: (R) -> (T)): ApiResult<L, T> = this.flatMap(fn.c(::success))
+fun <T, L, R> DataResult<L, R>.map(fn: (R) -> (T)): DataResult<L, T> = this.flatMap(fn.c(::success))

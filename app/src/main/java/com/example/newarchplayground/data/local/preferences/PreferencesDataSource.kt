@@ -6,9 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
-import com.example.newarchplayground.data.common.ApiResult
-import com.example.newarchplayground.data.repository.ApiResultFlowWrapperDelegate
-import com.example.newarchplayground.data.repository.IApiResultFlowWrapper
+import com.example.newarchplayground.data.common.DataResult
+import com.example.newarchplayground.data.repository.ResultFlowWrapperDelegate
+import com.example.newarchplayground.data.repository.IResultFlowWrapper
 import com.example.newarchplayground.data.util.Failure
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -24,7 +24,7 @@ class PreferencesDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     preferenceName: String,
     migrationPreferenceName: String? = null,
-) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate() {
+) : IResultFlowWrapper by ResultFlowWrapperDelegate() {
 
     private val Context.dataStore by preferencesDataStore(
         name = preferenceName,
@@ -39,8 +39,8 @@ class PreferencesDataSource @Inject constructor(
     fun <E, S> getPreference(
         key: Preferences.Key<S>,
         defaultValue: S? = null
-    ): Flow<ApiResult<E, S?>> = flow {
-        emit(ApiResult.Loading)
+    ): Flow<DataResult<E, S?>> = flow {
+        emit(DataResult.Loading)
 
         val dataFlow = context.dataStore.data
             .catch { exception ->
@@ -51,33 +51,33 @@ class PreferencesDataSource @Inject constructor(
                 }
             }
             .map { preferences ->
-                ApiResult.Success(preferences[key] ?: defaultValue)
+                DataResult.Success(preferences[key] ?: defaultValue)
             }
 
         emitAll(dataFlow)
     }
 
-    fun <S> editPreference(key: Preferences.Key<S>, value: S): Flow<ApiResult<Failure, Unit>> =
+    fun <S> editPreference(key: Preferences.Key<S>, value: S): Flow<DataResult<Failure, Unit>> =
         editorApiResultWrapper {
             context.dataStore.edit { it[key] = value }
         }
 
-    fun <S> removePreference(key: Preferences.Key<S>): Flow<ApiResult<Failure, Unit>> =
+    fun <S> removePreference(key: Preferences.Key<S>): Flow<DataResult<Failure, Unit>> =
         editorApiResultWrapper {
             context.dataStore.edit { it.remove(key) }
         }
 
-    fun <S> clearAllPreference(): Flow<ApiResult<Failure, Unit>> = editorApiResultWrapper {
+    fun <S> clearAllPreference(): Flow<DataResult<Failure, Unit>> = editorApiResultWrapper {
         context.dataStore.edit { it.clear() }
     }
 
-    private fun <S> editorApiResultWrapper(function: suspend () -> S): Flow<ApiResult<Failure, S>> =
+    private fun <S> editorApiResultWrapper(function: suspend () -> S): Flow<DataResult<Failure, S>> =
         flowResult {
             try {
-                ApiResult.Success(function.invoke())
+                DataResult.Success(function.invoke())
             } catch (e: IOException) {
                 Timber.e(e)
-                ApiResult.Error(Failure.IOException)
+                DataResult.Error(Failure.IOException)
             }
         }
 }
