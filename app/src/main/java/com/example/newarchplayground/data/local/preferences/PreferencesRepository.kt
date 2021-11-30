@@ -9,12 +9,12 @@ class PreferencesRepository @Inject constructor(
     @SettingsPreference private val settingsPreferenceDataSource: PreferencesDataSource,
 ) {
 
-    suspend fun getPrefName() =
+    fun getPrefName() =
         preferencesDataSource.getPreference(DataStorePreferenceConstants.NAME_KEY)
 
-    suspend fun hasOnboardingShown() =
+    fun hasOnboardingShown() =
         settingsPreferenceDataSource.getPreference(DataStorePreferenceConstants.HAS_ONBOARDING_SHOWN_KEY)
 
-    suspend fun editName(value: String) =
+    fun editName(value: String) =
         preferencesDataSource.editPreference(DataStorePreferenceConstants.NAME_KEY, value)
 }

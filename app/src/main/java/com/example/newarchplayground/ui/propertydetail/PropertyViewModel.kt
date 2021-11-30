@@ -22,11 +22,14 @@ class PropertyViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getProperties()
-            preferencesRepository.editName("burak").flowOn(Dispatchers.Main).collect {
+            preferencesRepository.editName("burak").collect {
                 Log.d("PropertyViewModel: edit: ", it::class.simpleName.toString())
             }
-            preferencesRepository.getPrefName().flowOn(Dispatchers.Main).collect {
-                Log.d("PropertyViewModel: collect: ", it::class.simpleName.toString().plus(" ${(it as? ApiResult.Success)?.data ?: ""}"))
+            preferencesRepository.getPrefName().collect {
+                Log.d("PropertyViewModel: collect: ",
+                    it::class.simpleName.toString()
+                        .plus(" ${(it as? ApiResult.Success)?.data ?: ""}")
+                )
             }
         }
     }

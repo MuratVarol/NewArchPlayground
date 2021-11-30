@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.newarchplayground.data.common.ApiResult
-import com.example.newarchplayground.data.repository.ApiResultFlowWrapperImpl
+import com.example.newarchplayground.data.repository.ApiResultFlowWrapperDelegate
 import com.example.newarchplayground.data.repository.IApiResultFlowWrapper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
@@ -23,7 +23,7 @@ class PreferencesDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
     preferenceName: String,
     migrationPreferenceName: String? = null,
-) : IApiResultFlowWrapper by ApiResultFlowWrapperImpl() {
+) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate() {
 
     private val Context.dataStore by preferencesDataStore(
         name = preferenceName,
@@ -35,7 +35,7 @@ class PreferencesDataSource @Inject constructor(
         }
     )
 
-    suspend fun <T> getPreference(
+    fun <T> getPreference(
         key: Preferences.Key<T>,
         defaultValue: T? = null
     ): Flow<ApiResult<T?>> = flow {
@@ -56,20 +56,21 @@ class PreferencesDataSource @Inject constructor(
         emitAll(dataFlow)
     }
 
+    fun <T> editPreference(key: Preferences.Key<T>, value: T): Flow<ApiResult<Unit>> =
+        editorApiResultWrapper {
+            context.dataStore.edit { it[key] = value }
+        }
 
-    suspend fun <T> editPreference(key: Preferences.Key<T>, value: T) = editorApiResultWrapper {
-        context.dataStore.edit { it[key] = value }
-    }
+    fun <T> removePreference(key: Preferences.Key<T>): Flow<ApiResult<Unit>> =
+        editorApiResultWrapper {
+            context.dataStore.edit { it.remove(key) }
+        }
 
-    suspend fun <T> removePreference(key: Preferences.Key<T>) = editorApiResultWrapper {
-        context.dataStore.edit { it.remove(key) }
-    }
-
-    suspend fun clearAllPreference() = editorApiResultWrapper {
+    fun clearAllPreference(): Flow<ApiResult<Unit>> = editorApiResultWrapper {
         context.dataStore.edit { it.clear() }
     }
 
-    private suspend fun <T> editorApiResultWrapper(function: suspend () -> T): Flow<ApiResult<T>> =
+    private fun <T> editorApiResultWrapper(function: suspend () -> T): Flow<ApiResult<T>> =
         flowResult {
             try {
                 ApiResult.Success(function.invoke())

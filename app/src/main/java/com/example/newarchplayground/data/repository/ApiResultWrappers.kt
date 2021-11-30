@@ -11,7 +11,7 @@ interface IApiResultFlowWrapper {
     fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>>
 }
 
-class ApiResultFlowWrapperImpl : IApiResultFlowWrapper {
+class ApiResultFlowWrapperDelegate : IApiResultFlowWrapper {
     override fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>> =
         flow {
             emit(ApiResult.Loading)
@@ -26,7 +26,7 @@ interface ILiveDataRequestWrapper {
     fun <T> liveDataResult(networkCall: suspend () -> ApiResult<T>): LiveData<ApiResult<T>>
 }
 
-class LiveDataRequestWrapperImpl : ILiveDataRequestWrapper {
+class LiveDataRequestWrapperDelegate : ILiveDataRequestWrapper {
     override fun <T> liveDataResult(networkCall: suspend () -> ApiResult<T>): LiveData<ApiResult<T>> {
         TODO("Not yet implemented")
     }

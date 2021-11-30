@@ -7,10 +7,10 @@ import com.example.newarchplayground.data.remote.datasource.PropertyRemoteRemote
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-open class PropertyRepository @Inject constructor(
+class PropertyRepository @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteRemoteDataSource
-) : IApiResultFlowWrapper by ApiResultFlowWrapperImpl(),
-    ILiveDataRequestWrapper by LiveDataRequestWrapperImpl() {
+) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate(),
+    ILiveDataRequestWrapper by LiveDataRequestWrapperDelegate() {
 
     fun getProperties(): Flow<ApiResult<PropertyResponseModel>> = flowResult {
         propertyRemoteDataSource.getProperties()
