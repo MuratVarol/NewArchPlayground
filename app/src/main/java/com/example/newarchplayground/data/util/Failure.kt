@@ -14,4 +14,5 @@ sealed class Failure : IOException() {
     object EmptyResponse : Failure()
     object ParsingDataError : Failure()
     object IgnorableError : Failure()
+    object IOException : Failure()
 }

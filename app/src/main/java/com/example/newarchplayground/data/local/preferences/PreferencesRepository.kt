@@ -1,7 +1,10 @@
 package com.example.newarchplayground.data.local.preferences
 
+import com.example.newarchplayground.data.common.ApiResult
+import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.di.SettingsPreference
 import com.example.newarchplayground.di.UserPreference
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PreferencesRepository @Inject constructor(
@@ -9,10 +12,10 @@ class PreferencesRepository @Inject constructor(
     @SettingsPreference private val settingsPreferenceDataSource: PreferencesDataSource,
 ) {
 
-    fun getPrefName() =
+    fun getPrefName(): Flow<ApiResult<Failure, String?>> =
         preferencesDataSource.getPreference(DataStorePreferenceConstants.NAME_KEY)
 
-    fun hasOnboardingShown() =
+    fun hasOnboardingShown(): Flow<ApiResult<Failure, Boolean?>> =
         settingsPreferenceDataSource.getPreference(DataStorePreferenceConstants.HAS_ONBOARDING_SHOWN_KEY)
 
     fun editName(value: String) =

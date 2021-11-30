@@ -5,7 +5,7 @@ import com.example.newarchplayground.data.util.Failure
 
 open class BaseRemoteDataSource {
 
-    protected suspend fun <S> fetchResult(call: suspend () -> S): ApiResult<Failure,S> {
+    protected suspend fun <S> fetchResult(call: suspend () -> S): ApiResult<Failure, S> {
         return try {
             ApiResult.Success(call())
         } catch (exception: Exception) {

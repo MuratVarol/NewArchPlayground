@@ -9,6 +9,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.newarchplayground.data.common.ApiResult
 import com.example.newarchplayground.data.repository.ApiResultFlowWrapperDelegate
 import com.example.newarchplayground.data.repository.IApiResultFlowWrapper
+import com.example.newarchplayground.data.util.Failure
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
@@ -35,10 +36,10 @@ class PreferencesDataSource @Inject constructor(
         }
     )
 
-    fun <T> getPreference(
-        key: Preferences.Key<T>,
-        defaultValue: T? = null
-    ): Flow<ApiResult<T?>> = flow {
+    fun <E, S> getPreference(
+        key: Preferences.Key<S>,
+        defaultValue: S? = null
+    ): Flow<ApiResult<E, S?>> = flow {
         emit(ApiResult.Loading)
 
         val dataFlow = context.dataStore.data
@@ -56,27 +57,27 @@ class PreferencesDataSource @Inject constructor(
         emitAll(dataFlow)
     }
 
-    fun <T> editPreference(key: Preferences.Key<T>, value: T): Flow<ApiResult<Unit>> =
+    fun <S> editPreference(key: Preferences.Key<S>, value: S): Flow<ApiResult<Failure, Unit>> =
         editorApiResultWrapper {
             context.dataStore.edit { it[key] = value }
         }
 
-    fun <T> removePreference(key: Preferences.Key<T>): Flow<ApiResult<Unit>> =
+    fun <S> removePreference(key: Preferences.Key<S>): Flow<ApiResult<Failure, Unit>> =
         editorApiResultWrapper {
             context.dataStore.edit { it.remove(key) }
         }
 
-    fun clearAllPreference(): Flow<ApiResult<Unit>> = editorApiResultWrapper {
+    fun <S> clearAllPreference(): Flow<ApiResult<Failure, Unit>> = editorApiResultWrapper {
         context.dataStore.edit { it.clear() }
     }
 
-    private fun <T> editorApiResultWrapper(function: suspend () -> T): Flow<ApiResult<T>> =
+    private fun <S> editorApiResultWrapper(function: suspend () -> S): Flow<ApiResult<Failure, S>> =
         flowResult {
             try {
                 ApiResult.Success(function.invoke())
             } catch (e: IOException) {
                 Timber.e(e)
-                ApiResult.Error(e.message ?: "", e)
+                ApiResult.Error(Failure.IOException)
             }
         }
 }

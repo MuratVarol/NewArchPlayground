@@ -8,11 +8,11 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 interface IApiResultFlowWrapper {
-    fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>>
+    fun <E, S> flowResult(dataCall: suspend () -> ApiResult<E, S>): Flow<ApiResult<E, S>>
 }
 
 class ApiResultFlowWrapperDelegate : IApiResultFlowWrapper {
-    override fun <T> flowResult(dataCall: suspend () -> ApiResult<T>): Flow<ApiResult<T>> =
+    override fun <E, S> flowResult(dataCall: suspend () -> ApiResult<E, S>): Flow<ApiResult<E, S>> =
         flow {
             emit(ApiResult.Loading)
 
@@ -23,11 +23,11 @@ class ApiResultFlowWrapperDelegate : IApiResultFlowWrapper {
 
 
 interface ILiveDataRequestWrapper {
-    fun <T> liveDataResult(networkCall: suspend () -> ApiResult<T>): LiveData<ApiResult<T>>
+    fun <E, S> liveDataResult(networkCall: suspend () -> ApiResult<E, S>): LiveData<ApiResult<E, S>>
 }
 
 class LiveDataRequestWrapperDelegate : ILiveDataRequestWrapper {
-    override fun <T> liveDataResult(networkCall: suspend () -> ApiResult<T>): LiveData<ApiResult<T>> {
+    override fun <E, S> liveDataResult(networkCall: suspend () -> ApiResult<E, S>): LiveData<ApiResult<E, S>> {
         TODO("Not yet implemented")
     }
 }

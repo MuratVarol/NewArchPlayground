@@ -3,15 +3,14 @@ package com.example.newarchplayground.data.repository
 import com.example.newarchplayground.PropertyUiModel
 import com.example.newarchplayground.data.model.PropertyItemResponseModel
 import com.example.newarchplayground.data.PropertyRepository
-import com.example.newarchplayground.data.base.BaseRepository
 import com.example.newarchplayground.data.remote.datasource.PropertyRemoteDataSource
 import javax.inject.Inject
 
 class PropertyRepositoryImp @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteDataSource
-) : BaseRepository(), PropertyRepository {
+) : IApiResultFlowWrapper by ApiResultFlowWrapperDelegate(), PropertyRepository {
 
-    override fun getProperties() = resultFlow {
+    override fun getProperties() = flowResult {
         propertyRemoteDataSource.getProperties().transform { response -> response?.properties?.map { it.toUiModel() } }
     }
 

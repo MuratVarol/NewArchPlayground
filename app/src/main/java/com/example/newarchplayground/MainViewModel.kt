@@ -1,13 +1,10 @@
 package com.example.newarchplayground
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newarchplayground.data.common.ApiResult
 import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -30,15 +27,23 @@ class MainViewModel @Inject constructor(
         getProperties()
     }
 
-    fun reverseList(){
+    fun reverseList() {
         //caution: works only with immutable list, it is not working if it is a mutableList
-        val list : MutableList<PropertyUiModel> = _list.value.toMutableList()
+        val list: MutableList<PropertyUiModel> = _list.value.toMutableList()
         list.removeAt(1)
-        list.add(1,PropertyUiModel("","Property X","This is dynamically added\nrow, ","https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"))
+        list.add(
+            1,
+            PropertyUiModel(
+                "",
+                "Property X",
+                "This is dynamically added\nrow, ",
+                "https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"
+            )
+        )
         _list.value = list.reversed()
     }
 
-    fun getProperties(){
+    fun getProperties() {
         propertyListUseCase.getProperties()
             .onEach { data ->
                 data.either(::handleError, ::handleSuccess, ::showLoading)

@@ -24,10 +24,10 @@ sealed class ApiResult<out E, out S> {
             is Loading -> fnLoading
         }
 
-    fun neither(fnL: (E) -> Any, fnR: () -> Unit, fnLoading: () -> Unit): Any =
+    fun neither(fnError: (E) -> Any, fnSuccess: () -> Unit, fnLoading: () -> Unit): Any =
         when (this) {
-            is Error -> fnL(a)
-            is Success -> fnR()
+            is Error -> fnError(a)
+            is Success -> fnSuccess()
             is Loading -> fnLoading
         }
 
