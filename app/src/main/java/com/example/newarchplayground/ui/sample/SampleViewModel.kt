@@ -5,7 +5,7 @@ import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBarImpl
-import com.example.newarchplayground.ui.sample.usecase.SampleUseCase
+import com.example.newarchplayground.data.usecase.SampleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay

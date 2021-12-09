@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.sample.usecase
+package com.example.newarchplayground.data.usecase
 
 import com.example.newarchplayground.ui.common.IUseCase
 import javax.inject.Inject
