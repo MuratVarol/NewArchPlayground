@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.base
+package com.example.newarchplayground.ui.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,7 +1,5 @@
-package com.example.newarchplayground.ui.base.composable
+package com.example.newarchplayground.ui.common
 
-import com.example.newarchplayground.ui.base.BaseViewModel
-import com.example.newarchplayground.ui.base.UiState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
@@ -12,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import com.example.newarchplayground.util.lifecycleAwareState
 
 @Composable
 fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(

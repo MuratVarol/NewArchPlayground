@@ -1,6 +1,6 @@
 package com.example.newarchplayground.ui.sample
 
-import com.example.newarchplayground.ui.base.UiEffect
+import com.example.newarchplayground.ui.common.UiEffect
 
 class SampleContract {
     data class State(

@@ -18,7 +18,7 @@ object PfDestination {
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState,
-    startDestination: String = PfDestination.SAMPLE_PATH
+    startDestination: String = PfDestination.PROPERTY_LIST
 ) {
     NavHost(
         navController = navController,
@@ -28,7 +28,7 @@ fun NavGraph(
             SampleScreen(scaffoldState = scaffoldState)
         }
         composable(PfDestination.PROPERTY_LIST) {
-            PropertyListUi()
+            PropertyListUi(scaffoldState = scaffoldState)
         }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.newarchplayground.ui.composable
 
-import com.example.newarchplayground.ui.base.BaseViewModel
-import com.example.newarchplayground.ui.base.UiState
+import com.example.newarchplayground.ui.common.BaseViewModel
+import com.example.newarchplayground.ui.common.UiState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
@@ -18,22 +18,22 @@ fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
     scaffoldState: ScaffoldState,
     viewModel: VM,
     renderOnLoading: @Composable (loadingHandler: (Boolean) -> Unit) -> Unit = {
-        com.example.newarchplayground.ui.base.composable.LoadingScreen()
+        com.example.newarchplayground.ui.common.LoadingScreen()
     },
     renderOnFailure: @Composable (failureHandler: (String) -> Unit) -> Unit = {
-        com.example.newarchplayground.ui.base.composable.FailureScreen()
+        com.example.newarchplayground.ui.common.FailureScreen()
     },
     renderOnSuccess: @Composable (state: UiState<STATE>) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    com.example.newarchplayground.ui.base.composable.HandleSnackBarIfSupported(
+    com.example.newarchplayground.ui.common.HandleSnackBarIfSupported(
         lifecycleOwner,
         viewModel,
         scaffoldState
     )
 
-    val state by com.example.newarchplayground.ui.base.composable.lifecycleAwareState(
+    val state by com.example.newarchplayground.util.lifecycleAwareState(
         lifecycleOwner = lifecycleOwner,
         stateFlow = viewModel.uiState,
         initialState = viewModel.initialState

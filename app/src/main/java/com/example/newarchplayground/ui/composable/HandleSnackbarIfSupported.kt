@@ -16,7 +16,7 @@ fun HandleSnackBarIfSupported(
     scaffoldState: ScaffoldState
 ) {
     if (viewModel is CanDisplaySnackBar) {
-        val snackBarState by com.example.newarchplayground.ui.base.composable.lifecycleAwareState(
+        val snackBarState by com.example.newarchplayground.util.lifecycleAwareState(
             lifecycleOwner = lifecycleOwner,
             stateFlow = viewModel.snackBarState,
             initialState = viewModel.initialSnackBarState

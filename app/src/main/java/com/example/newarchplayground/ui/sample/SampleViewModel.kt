@@ -1,8 +1,8 @@
 package com.example.newarchplayground.ui.sample
 
-import com.example.newarchplayground.ui.base.BaseViewModel
-import com.example.newarchplayground.ui.base.UiState
-import com.example.newarchplayground.ui.base.successData
+import com.example.newarchplayground.ui.common.BaseViewModel
+import com.example.newarchplayground.ui.common.UiState
+import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBarImpl
 import com.example.newarchplayground.ui.sample.usecase.SampleUseCase

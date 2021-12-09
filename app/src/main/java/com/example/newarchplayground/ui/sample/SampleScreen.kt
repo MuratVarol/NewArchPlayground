@@ -1,7 +1,7 @@
 package com.example.newarchplayground.ui.sample
 
-import com.example.newarchplayground.ui.base.composable.BaseComposeScreen
-import com.example.newarchplayground.ui.base.successData
+import com.example.newarchplayground.ui.common.BaseComposeScreen
+import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.sample.components.SampleScreenBody
 import androidx.compose.material.Scaffold
 import androidx.compose.material.ScaffoldState

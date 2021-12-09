@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.base.composable
+package com.example.newarchplayground.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

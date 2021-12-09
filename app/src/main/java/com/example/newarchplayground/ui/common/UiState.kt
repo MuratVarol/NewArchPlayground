@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.base
+package com.example.newarchplayground.ui.common
 
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()

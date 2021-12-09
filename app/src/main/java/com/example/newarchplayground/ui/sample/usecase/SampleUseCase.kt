@@ -1,6 +1,6 @@
 package com.example.newarchplayground.ui.sample.usecase
 
-import com.example.newarchplayground.ui.base.IUseCase
+import com.example.newarchplayground.ui.common.IUseCase
 import javax.inject.Inject
 import kotlin.random.Random
 

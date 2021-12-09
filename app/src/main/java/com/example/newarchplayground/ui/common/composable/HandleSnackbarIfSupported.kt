@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.base.composable
+package com.example.newarchplayground.ui.common
 
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
 import androidx.compose.material.ScaffoldState
@@ -8,6 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
+import com.example.newarchplayground.util.lifecycleAwareState
 
 @Composable
 fun HandleSnackBarIfSupported(
