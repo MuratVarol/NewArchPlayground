@@ -2,6 +2,7 @@ package com.example.newarchplayground.di
 
 import com.example.newarchplayground.data.remote.PropertyApi
 import com.example.newarchplayground.data.remote.SomeOtherApi
+import com.example.newarchplayground.data.remote.datasource.PagingPropertySource
 import com.example.newarchplayground.data.remote.datasource.PropertyRemoteDataSource
 import com.example.newarchplayground.data.remote.datasource.SomeOtherRemoteDataSource
 import dagger.Module
@@ -18,6 +19,11 @@ object DataSourceModule {
     @Singleton
     fun providePropertyRemoteDataSource(api: PropertyApi): PropertyRemoteDataSource =
         PropertyRemoteDataSource(api)
+
+    @Provides
+    @Singleton
+    fun provideSearchPagingSource(api: PropertyApi): PagingPropertySource =
+        PagingPropertySource(api)
 
     @Provides
     @Singleton

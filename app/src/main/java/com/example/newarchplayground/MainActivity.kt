@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.newarchplayground.ui.theme.NewArchPlaygroundTheme
-import com.example.newarchplayground.ui.components.PropertyListUi
+import com.example.newarchplayground.ui.components.SearchList
 import com.example.newarchplayground.ui.propertydetail.PropertyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,10 +24,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             NewArchPlaygroundTheme {
                 Scaffold(
-                    topBar = { TopAppBar(title = { Text("SimpleListWithCOMPOSE") }) },
+                    topBar = { TopAppBar(title = { Text("SearchList") }) },
                 ){
                     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-                        PropertyListUi()
+                        SearchList()
                     }
                 }
                 // A surface container using the 'background' color from the theme

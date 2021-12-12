@@ -8,6 +8,7 @@ import com.example.newarchplayground.data.local.preferences.PreferencesRepositor
 import com.example.newarchplayground.data.repository.PropertyRepository
 import com.example.newarchplayground.data.util.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn

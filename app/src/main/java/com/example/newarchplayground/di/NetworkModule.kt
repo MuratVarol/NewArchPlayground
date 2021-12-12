@@ -6,6 +6,7 @@ import com.example.newarchplayground.BuildConfig
 import com.example.newarchplayground.data.remote.PropertyApi
 import com.example.newarchplayground.data.remote.SomeOtherApi
 import com.example.newarchplayground.util.AppConstants.BASE_URL
+import com.google.gson.GsonBuilder
 import com.squareup.moshi.Moshi
 import dagger.Lazy
 import dagger.Module
@@ -69,6 +70,10 @@ object NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             //.addConverterFactory(ResponseConverterFactory())
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().serializeNulls().create()
+                ))
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .callFactory { client.get().newCall(it) }
             .build()

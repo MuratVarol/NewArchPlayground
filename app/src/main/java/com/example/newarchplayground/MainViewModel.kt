@@ -2,6 +2,10 @@ package com.example.newarchplayground
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.newarchplayground.data.PropertyData
+import com.example.newarchplayground.data.repository.PropertyRepositoryImp
 import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val propertyListUseCase: GetPropertyListUseCase
+    private val propertyListUseCase: GetPropertyListUseCase,
+    private val repo:PropertyRepositoryImp
 ) : ViewModel() {
 
     // same as LiveData's LiveData and MutableLiveData
@@ -69,4 +74,10 @@ class MainViewModel @Inject constructor(
 
         _isLoading.value = false
     }
+
+
+    fun getSearch(): Flow<PagingData<PropertyData>>{
+        return repo.getSearch().cachedIn(viewModelScope)
+    }
+
 }
