@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.local.preferences.PreferencesRepository
 import com.example.newarchplayground.data.repository.PropertyRepository
+import com.google.gson.internal.LinkedTreeMap
 import com.example.newarchplayground.data.util.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -55,12 +56,6 @@ class PropertyViewModel @Inject constructor(
     }
 
     private suspend fun getProperties() {
-        propertyRepository.getProperties().collect {
-            when (it) {
-                is DataResult.Success -> {}
-                is DataResult.Error -> {}
-                DataResult.Loading -> {}
-            }
-        }
+
     }
 }
