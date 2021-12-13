@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.common
+package com.example.newarchplayground.ui.common.composable
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +10,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import com.example.newarchplayground.ui.common.BaseSateViewModel
+import com.example.newarchplayground.ui.common.UiState
+import com.example.newarchplayground.ui.sample.BaseViewModel
 import com.example.newarchplayground.util.lifecycleAwareState
 
 @Composable
 fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
+    scaffoldState: ScaffoldState,
+    viewModel: VM,
+    render: @Composable () -> Unit
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState)
+    render()
+}
+
+@Composable
+fun <STATE, VM : BaseSateViewModel<STATE>> BaseComposeScreen2(
     scaffoldState: ScaffoldState,
     viewModel: VM,
     renderOnLoading: @Composable (loadingHandler: (Boolean) -> Unit) -> Unit = {
@@ -25,7 +39,6 @@ fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
     renderOnSuccess: @Composable (state: UiState<STATE>) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-
     HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState)
 
     val state by lifecycleAwareState(

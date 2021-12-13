@@ -2,6 +2,8 @@ package com.example.newarchplayground.ui.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.newarchplayground.ui.sample.BaseState
+import com.example.newarchplayground.ui.sample.SampleUIState2
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class BaseViewModel<STATE>(
+abstract class BaseSateViewModel<STATE>(
     val initialState: UiState<STATE> = UiState.Loading,
 ) : ViewModel() {
 
@@ -34,12 +36,6 @@ abstract class BaseViewModel<STATE>(
 
     fun updateUiState(updateFunc: (UiState<STATE>) -> UiState<STATE>) {
         _uiState.update(updateFunc)
-    }
-
-    protected fun updateUiSuccessState(update: (STATE) -> STATE) {
-        _uiState.update {
-            UiState.Success(update(currentState.successData))
-        }
     }
 
     protected fun safeLaunch(block: suspend CoroutineScope.() -> Unit) {

@@ -17,11 +17,11 @@ sealed class DataResult<out E, out S> {
     fun <L> error(a: L) = Error(a)
     fun <R> success(b: R) = Success(b)
 
-    fun either(fnError: (E) -> Any, fnSuccess: (S) -> Any, fnLoading: () -> Unit): Any =
+    fun <T> either(fnError: (E) -> T, fnSuccess: (S) -> T, fnLoading: () -> T): T =
         when (this) {
             is Error -> fnError(a)
             is Success -> fnSuccess(b)
-            is Loading -> fnLoading
+            is Loading -> fnLoading()
         }
 
     fun neither(fnError: (E) -> Any, fnSuccess: () -> Unit, fnLoading: () -> Unit): Any =

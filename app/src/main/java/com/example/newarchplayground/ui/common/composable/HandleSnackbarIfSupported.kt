@@ -1,4 +1,4 @@
-package com.example.newarchplayground.ui.common
+package com.example.newarchplayground.ui.common.composable
 
 import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
 import androidx.compose.material.ScaffoldState

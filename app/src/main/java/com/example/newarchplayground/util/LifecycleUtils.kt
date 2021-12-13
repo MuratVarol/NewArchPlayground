@@ -15,6 +15,7 @@ fun <T> lifecycleAwareState(
     stateFlow: StateFlow<T>,
     initialState: T
 ): State<T> {
+
     val lifecycleAwareStateFlow = remember(stateFlow, lifecycleOwner) {
         stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
