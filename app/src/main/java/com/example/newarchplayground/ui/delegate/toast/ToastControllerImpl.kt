@@ -1,7 +1,5 @@
-package com.example.newarchplayground.ui.delegate
+package com.example.newarchplayground.ui.delegate.toast
 
-import com.example.newarchplayground.ui.delegate.toast.IToastController
-import com.example.newarchplayground.ui.delegate.toast.ToastState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +17,11 @@ class ToastControllerImpl(
     private val currentToastState: ToastState
         get() = toastState.value
 
-    override fun showToast(message: String) {
-        _toastState.value = currentToastState.copy(message = message)
+    override fun showToast(message: String, duration: Int) {
+        _toastState.value = currentToastState.copy(show = true, message = message, duration = duration)
+    }
+
+    override fun dismissToast() {
+        _toastState.value = currentToastState.copy(show = false)
     }
 }

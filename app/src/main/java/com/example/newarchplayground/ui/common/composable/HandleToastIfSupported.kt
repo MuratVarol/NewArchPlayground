@@ -24,8 +24,9 @@ fun HandleToastIfSupported(
         val context = LocalContext.current
 
         if (toastState.show) {
-            LaunchedEffect(toastState) {
+            LaunchedEffect(toastState.show) {
                 Toast.makeText(context, toastState.message, toastState.duration).show()
+                viewModel.dismissToast()
             }
         }
     }
