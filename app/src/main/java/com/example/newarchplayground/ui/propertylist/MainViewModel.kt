@@ -9,6 +9,7 @@ import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
 import com.example.newarchplayground.ui.delegate.toast.IToastController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 
@@ -29,16 +30,15 @@ class MainViewModel @Inject constructor(
         //caution: works only with immutable list, it is not working if it is a mutableList
         val list: MutableList<PropertyUiModel> =
             currentState.successData.propertyList.toMutableList()
-        list.removeAt(1)
-//        list.add(
-//            1,
-//            PropertyUiModel(
-//                "",
-//                "Property X",
-//                "This is dynamically added\nrow, ",
-//                "https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"
-//            )
-//        )
+        list.add(
+            1,
+            PropertyUiModel(
+                "",
+                "Property X",
+                "This is dynamically added\nrow, ",
+                "https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"
+            )
+        )
         list.reversed()
         updateUiState {
             UiState.Success(
@@ -51,6 +51,7 @@ class MainViewModel @Inject constructor(
 
     fun getProperties() {
         safeLaunch {
+            delay(2000)
             propertyListUseCase(this) { state ->
                 updateUiState { state }
             }
