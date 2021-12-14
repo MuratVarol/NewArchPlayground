@@ -1,6 +1,7 @@
 package com.example.newarchplayground.data.usecase
 
 import com.example.newarchplayground.data.common.DataResult
+import com.example.newarchplayground.data.common.ResultAlias
 import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.delegate.mapper.IUiStateMap
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlin.random.Random
 
-typealias ResultAlias<T> = DataResult<Failure, T>
 
 class SampleUseCase @Inject constructor() : IUseCase<List<String>, SampleUIState>,
     IUiStateMap by UiStateMapImpl() {

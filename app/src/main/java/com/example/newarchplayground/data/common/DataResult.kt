@@ -1,5 +1,9 @@
 package com.example.newarchplayground.data.common
 
+import com.example.newarchplayground.data.util.Failure
+
+
+typealias ResultAlias<T> = DataResult<Failure, T>
 
 sealed class DataResult<out E, out S> {
     /** * Represents the left side of [DataResult] class which by convention is a "Failure". */
