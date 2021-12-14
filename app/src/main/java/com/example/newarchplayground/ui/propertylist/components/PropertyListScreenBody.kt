@@ -13,12 +13,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.newarchplayground.PropertyUiModel
-import com.example.newarchplayground.ui.propertylist.MainViewModel
-import com.example.newarchplayground.util.extensions.longToast
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -26,9 +23,10 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @ExperimentalAnimationApi
 @Composable
 fun PropertyListScreenBody(
-    onRefreshClicked: () -> Unit,
+    onRefresh: () -> Unit,
     onFabClick: () -> Unit,
-    propertyList: List<PropertyUiModel>
+    propertyList: List<PropertyUiModel>,
+    isRefreshing: Boolean
 ) {
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         //creating reference for constraint layout
@@ -36,10 +34,10 @@ fun PropertyListScreenBody(
 
         //Accompanist has componnets such as SwipeRefresh or CardView
         // It is same as previous Anko of Kotlin but developed by Google
-        val swipeToRefreshState = rememberSwipeRefreshState(true)
+        val swipeToRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
         SwipeRefresh(
             state = swipeToRefreshState,
-            onRefresh = onRefreshClicked,
+            onRefresh = onRefresh,
             modifier = Modifier.fillMaxSize()
         ) {
             LazyColumn(

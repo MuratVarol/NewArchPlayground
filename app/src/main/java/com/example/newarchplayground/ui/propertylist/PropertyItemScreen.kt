@@ -46,8 +46,9 @@ fun PropertyListScreen(scaffoldState: ScaffoldState) {
         }
     ) { state ->
         PropertyListScreenBody(
-            onRefreshClicked = { viewModel.getProperties() },
+            onRefresh = { viewModel.onRefresh() },
             onFabClick = { viewModel.onFabClicked() },
+            isRefreshing = state.successData.isRefreshing,
             propertyList = state.successData.propertyList
         )
     }

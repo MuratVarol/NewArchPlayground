@@ -6,15 +6,16 @@ import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
 import com.example.newarchplayground.ui.common.BaseStateViewModel
 import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
 import com.example.newarchplayground.ui.delegate.toast.IToastController
+import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 
 data class MainScreenState(
-    val propertyList: List<PropertyUiModel> = emptyList()
+    val propertyList: List<PropertyUiModel> = emptyList(),
+    val isRefreshing: Boolean = false
 )
 
 @HiltViewModel
@@ -24,6 +25,15 @@ class MainViewModel @Inject constructor(
 
     init {
         getProperties()
+    }
+
+    private fun getProperties() {
+        safeLaunch {
+            delay(2000)
+            propertyListUseCase(this) { state ->
+                updateUiState { state }
+            }
+        }
     }
 
     private fun reverseList() {
@@ -49,13 +59,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getProperties() {
-        safeLaunch {
-            delay(2000)
-            propertyListUseCase(this) { state ->
-                updateUiState { state }
-            }
+    fun onRefresh() {
+        updateUiState {
+            UiState.Success(
+                it.successData.copy(
+                    isRefreshing = true
+                )
+            )
         }
+        getProperties()
     }
 
     fun onFabClicked() {
