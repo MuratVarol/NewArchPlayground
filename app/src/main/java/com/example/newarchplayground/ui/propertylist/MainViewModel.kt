@@ -55,14 +55,4 @@ class MainViewModel @Inject constructor(
                 .launchIn(viewModelScope)
         }
     }
-
-    private fun showLoading() = updateUiState { UiState.Loading }
-
-    private fun handleError(failure: Failure) {
-        failure.localizedMessage?.ifEmpty { return }
-
-        updateUiState {
-            UiState.Failure(failure.localizedMessage!!)
-        }
-    }
 }

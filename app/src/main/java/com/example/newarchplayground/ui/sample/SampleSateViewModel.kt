@@ -1,29 +1,27 @@
 package com.example.newarchplayground.ui.sample
 
-import androidx.lifecycle.viewModelScope
-import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.usecase.SampleUseCase
-import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.ui.common.BaseSateViewModel
 import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
-import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBarImpl
+import com.example.newarchplayground.ui.delegate.SnackbarControllerImpl
+import com.example.newarchplayground.ui.delegate.ToastControllerImpl
+import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
+import com.example.newarchplayground.ui.delegate.toast.IToastController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-data class SampleUIState2(
+
+data class SampleUIState(
     val list: List<String> = emptyList(),
 )
 
 @HiltViewModel
 class SampleStateViewModel @Inject constructor(
     private val sampleUseCase: SampleUseCase
-) : BaseSateViewModel<SampleUIState2>(initialState = UiState.Loading),
-    CanDisplaySnackBar by CanDisplaySnackBarImpl() {
+) : BaseSateViewModel<SampleUIState>(initialState = UiState.Loading),
+    ISnackBarController by SnackbarControllerImpl(), IToastController by ToastControllerImpl() {
 
     init {
         loadList()
@@ -32,45 +30,24 @@ class SampleStateViewModel @Inject constructor(
     private fun loadList() {
         safeLaunch {
             delay(2000)
-            sampleUseCase.invoke()
-                .onEach { data ->
-                    updateUiState {
-                        flowMap(data) {
-                            SampleUIState2(list = it)
-                        }
-                    }
-                }
-                .launchIn(viewModelScope)
+            sampleUseCase.invoke(this) { state ->
+                updateUiState { state }
+            }
         }
     }
 
-    private fun <DATA, RESULT>flowMap(data: DataResult<Failure, DATA>, onSuccess: (DATA) -> RESULT): UiState<RESULT> {
-        return data.either(
-            fnError = {
-                UiState.Failure(it.localizedMessage ?: "")
-            },
-            fnSuccess = {
-                UiState.Success(
-                    onSuccess(it)
-                )
-            },
-            fnLoading = {
-                UiState.Loading
-            }
-        )
-    }
-
-    fun onSampleButtonClick(text: String) {
+    val onSampleButtonClick: (String) -> Unit = { text ->
         val currentList = currentState.successData.list.toMutableList()
         currentList.remove(text)
 
         updateUiState {
             UiState.Success(
-                it.successData.copy(
+                currentState.successData.copy(
                     list = currentList
                 )
             )
         }
+        showToast("$text is deleted!")
         if (currentList.isEmpty()) showSnackBar("List is empty!")
     }
 }

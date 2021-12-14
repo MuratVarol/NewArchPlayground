@@ -12,9 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.sample.SampleUIState
-import com.example.newarchplayground.ui.sample.SampleStateViewModel
+import com.example.newarchplayground.ui.sample.SampleUIState3
 import com.example.newarchplayground.ui.sample.SampleViewModel
 
 
@@ -28,7 +26,7 @@ fun SampleScreenBody(viewModel: SampleViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             val state =
-                remember(viewModel) { viewModel.uiState }.collectAsState(initial = SampleUIState())
+                remember(viewModel) { viewModel.uiState }.collectAsState(initial = SampleUIState3())
             state.value.list.map {
                 Button(
                     onClick = {
@@ -44,7 +42,7 @@ fun SampleScreenBody(viewModel: SampleViewModel) {
 }
 
 @Composable
-fun SampleScreenBody2(viewModel: SampleStateViewModel) {
+fun SampleScreenBody2(list: List<String>, onClick: (String) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -52,10 +50,10 @@ fun SampleScreenBody2(viewModel: SampleStateViewModel) {
                 .padding(horizontal = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            viewModel.currentState.successData.list.map {
+            list.map {
                 Button(
                     onClick = {
-                        viewModel.onSampleButtonClick(it)
+                        onClick(it)
                     },
                     modifier = Modifier.padding(top = 20.dp)
                 ) {

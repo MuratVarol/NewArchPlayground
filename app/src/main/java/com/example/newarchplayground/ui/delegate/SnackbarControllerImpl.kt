@@ -1,22 +1,14 @@
-package com.example.newarchplayground.ui.delegate.snackbar
+package com.example.newarchplayground.ui.delegate
 
+import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
+import com.example.newarchplayground.ui.delegate.snackbar.SnackBarState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-interface CanDisplaySnackBar {
-    val initialSnackBarState: SnackBarState
-
-    val snackBarState: StateFlow<SnackBarState>
-
-    fun showSnackBar(message: String)
-
-    fun dismissSnackBar()
-}
-
-class CanDisplaySnackBarImpl(
+class SnackbarControllerImpl(
     override val initialSnackBarState: SnackBarState = SnackBarState()
-) : CanDisplaySnackBar {
+) : ISnackBarController {
 
     private val _snackBarState: MutableStateFlow<SnackBarState> by lazy {
         MutableStateFlow(initialSnackBarState)

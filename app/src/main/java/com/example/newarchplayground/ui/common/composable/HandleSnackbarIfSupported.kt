@@ -1,7 +1,7 @@
 package com.example.newarchplayground.ui.common.composable
 
-import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
-import androidx.compose.material.ScaffoldState
+import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,9 +14,9 @@ import com.example.newarchplayground.util.lifecycleAwareState
 fun HandleSnackBarIfSupported(
     lifecycleOwner: LifecycleOwner,
     viewModel: ViewModel,
-    scaffoldState: ScaffoldState
+    snackbarHostState: SnackbarHostState
 ) {
-    if (viewModel is CanDisplaySnackBar) {
+    if (viewModel is ISnackBarController) {
         val snackBarState by lifecycleAwareState(
             lifecycleOwner = lifecycleOwner,
             stateFlow = viewModel.snackBarState,
@@ -24,8 +24,8 @@ fun HandleSnackBarIfSupported(
         )
 
         if (snackBarState.show) {
-            LaunchedEffect(scaffoldState.snackbarHostState) {
-                when (scaffoldState.snackbarHostState.showSnackbar(snackBarState.message)) {
+            LaunchedEffect(snackbarHostState) {
+                when (snackbarHostState.showSnackbar(snackBarState.message)) {
                     SnackbarResult.Dismissed -> viewModel.dismissSnackBar()
                     SnackbarResult.ActionPerformed -> {
                     }

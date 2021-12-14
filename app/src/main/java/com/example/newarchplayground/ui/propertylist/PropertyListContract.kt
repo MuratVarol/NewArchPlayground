@@ -1,6 +1,7 @@
 package com.example.newarchplayground.ui.propertylist
 
 import com.example.newarchplayground.PropertyUiModel
+import com.example.newarchplayground.ui.common.UiEffect
 import com.example.newarchplayground.ui.common.UiState
 
 class PropertyListContract {

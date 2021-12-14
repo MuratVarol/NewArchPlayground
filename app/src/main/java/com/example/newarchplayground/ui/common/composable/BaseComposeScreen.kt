@@ -22,7 +22,7 @@ fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
     render: @Composable () -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState)
+    HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState.snackbarHostState)
     render()
 }
 
@@ -30,16 +30,21 @@ fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
 fun <STATE, VM : BaseSateViewModel<STATE>> BaseComposeScreen2(
     scaffoldState: ScaffoldState,
     viewModel: VM,
-    renderOnLoading: @Composable (loadingHandler: (Boolean) -> Unit) -> Unit = {
+    renderOnLoading: @Composable () -> Unit = {
         LoadingScreen()
     },
-    renderOnFailure: @Composable (failureHandler: (String) -> Unit) -> Unit = {
+    renderOnFailure: @Composable () -> Unit = {
         FailureScreen()
     },
     renderOnSuccess: @Composable (state: UiState<STATE>) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
-    HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState)
+    HandleSnackBarIfSupported(
+        lifecycleOwner = lifecycleOwner,
+        viewModel = viewModel,
+        snackbarHostState = scaffoldState.snackbarHostState
+    )
+    HandleToastIfSupported(lifecycleOwner = lifecycleOwner, viewModel = viewModel)
 
     val state by lifecycleAwareState(
         lifecycleOwner = lifecycleOwner,
@@ -48,9 +53,9 @@ fun <STATE, VM : BaseSateViewModel<STATE>> BaseComposeScreen2(
     )
 
     when (state) {
-        is UiState.Loading -> renderOnLoading.invoke(viewModel.loadingHandler)
+        is UiState.Loading -> renderOnLoading.invoke()
         is UiState.Success -> renderOnSuccess.invoke(state)
-        is UiState.Failure -> renderOnFailure.invoke(viewModel.failureHandler)
+        is UiState.Failure -> renderOnFailure.invoke()
     }
 }
 

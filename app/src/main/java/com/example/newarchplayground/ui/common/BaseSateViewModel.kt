@@ -2,39 +2,30 @@ package com.example.newarchplayground.ui.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newarchplayground.ui.sample.BaseState
-import com.example.newarchplayground.ui.sample.SampleUIState2
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class BaseSateViewModel<STATE>(
-    val initialState: UiState<STATE> = UiState.Loading,
+abstract class BaseSateViewModel<State>(
+    val initialState: UiState<State> = UiState.Loading,
 ) : ViewModel() {
 
     // Get Current State
-    val currentState: UiState<STATE>
+    val currentState: UiState<State>
         get() = uiState.value
 
-    private val _uiState: MutableStateFlow<UiState<STATE>> by lazy { MutableStateFlow(initialState) }
+    private val _uiState: MutableStateFlow<UiState<State>> by lazy { MutableStateFlow(initialState) }
     val uiState = _uiState.asStateFlow()
-
-    val loadingHandler: (Boolean) -> Unit = {
-
-    }
-    val failureHandler: (String) -> Unit = {
-
-    }
 
     open val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e(exception, COROUTINE_EXCEPTION_HANDLER_MESSAGE)
     }
 
-    fun updateUiState(updateFunc: (UiState<STATE>) -> UiState<STATE>) {
+    fun updateUiState(updateFunc: (UiState<State>) -> UiState<State>) {
         _uiState.update(updateFunc)
     }
 

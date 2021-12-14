@@ -3,8 +3,8 @@ package com.example.newarchplayground.ui.sample
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newarchplayground.data.usecase.SampleUseCase
-import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBar
-import com.example.newarchplayground.ui.delegate.snackbar.CanDisplaySnackBarImpl
+import com.example.newarchplayground.ui.delegate.SnackbarControllerImpl
+import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-data class SampleUIState(
+data class SampleUIState3(
     val list: List<String> = emptyList(),
     val errorMessage: String? = null,
     val loading: Boolean = true
@@ -23,8 +23,8 @@ data class SampleUIState(
 @HiltViewModel
 class SampleViewModel @Inject constructor(
     private val sampleUseCase: SampleUseCase
-) : BaseViewModel<SampleUIState>(initialState = SampleUIState()),
-    CanDisplaySnackBar by CanDisplaySnackBarImpl() {
+) : BaseViewModel<SampleUIState3>(initialState = SampleUIState3()),
+    ISnackBarController by SnackbarControllerImpl() {
 
     init {
         loadList()
@@ -33,29 +33,31 @@ class SampleViewModel @Inject constructor(
     private fun loadList() {
         safeLaunch {
             delay(2000)
-            sampleUseCase.invoke()
-                .onEach { data ->
-                    updateUiState {
-                        data.either(
-                            fnError = {
-                                currentState.copy(
-                                    errorMessage = it.localizedMessage,
-                                    loading = false
-                                )
-                            },
-                            fnSuccess = {
-                                currentState.copy(
-                                    list = it,
-                                    loading = false
-                                )
-                            },
-                            fnLoading = {
-                                currentState.copy(loading = true)
-                            }
-                        )
-                    }
-                }
-                .launchIn(viewModelScope)
+//            sampleUseCase.invoke {
+//                updateUiState { it }
+//            }
+//                .onEach { data ->
+//                    updateUiState {
+//                        data.either(
+//                            fnError = {
+//                                currentState.copy(
+//                                    errorMessage = it.localizedMessage,
+//                                    loading = false
+//                                )
+//                            },
+//                            fnSuccess = {
+//                                currentState.copy(
+//                                    list = it,
+//                                    loading = false
+//                                )
+//                            },
+//                            fnLoading = {
+//                                currentState.copy(loading = true)
+//                            }
+//                        )
+//                    }
+//                }
+//                .launchIn(viewModelScope)
         }
     }
 
