@@ -19,7 +19,7 @@ import com.google.accompanist.placeholder.fade
 import com.google.accompanist.placeholder.placeholder
 
 @Composable
-private fun ConstraintLayoutScope.addTitle(
+fun ConstraintLayoutScope.addTitle(
     image: ConstrainedLayoutReference,
     titleText: String?,
     isLoading: Boolean,

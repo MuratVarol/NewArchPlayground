@@ -1,30 +1,35 @@
 package com.example.newarchplayground.ui.propertylist
 
-import androidx.lifecycle.viewModelScope
-import com.example.newarchplayground.data.util.Failure
+import android.widget.Toast
+import com.example.newarchplayground.PropertyUiModel
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
-import com.example.newarchplayground.ui.common.BaseSateViewModel
+import com.example.newarchplayground.ui.common.BaseStateViewModel
 import com.example.newarchplayground.ui.common.UiState
+import com.example.newarchplayground.ui.common.successData
+import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
+import com.example.newarchplayground.ui.delegate.toast.IToastController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+
+
+data class MainScreenState(
+    val propertyList: List<PropertyUiModel> = emptyList()
+)
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val propertyListUseCase: GetPropertyListUseCase
-) : BaseSateViewModel<PropertyListContract.State>() {
+) : BaseStateViewModel<MainScreenState>(), IToastController by ToastControllerImpl() {
 
     init {
         getProperties()
     }
 
-    fun reverseList() {
+    private fun reverseList() {
         //caution: works only with immutable list, it is not working if it is a mutableList
-//        val list: MutableList<PropertyUiModel> =
-//            currentScreenState.successData.propertyListState.successData?.toMutableList()!!
-//        list.removeAt(1)
+        val list: MutableList<PropertyUiModel> =
+            currentState.successData.propertyList.toMutableList()
+        list.removeAt(1)
 //        list.add(
 //            1,
 //            PropertyUiModel(
@@ -34,25 +39,26 @@ class MainViewModel @Inject constructor(
 //                "https://www.iqiglobal.com/blog/wp-content/uploads/2019/08/Dubai-at-Day-960x655.jpg"
 //            )
 //        )
-//        updateUiSuccessState {
-//            it.copy(
-//                propertyList = list.reversed()
-//            )
-//        }
+        list.reversed()
+        updateUiState {
+            UiState.Success(
+                currentState.successData.copy(
+                    propertyList = list
+                )
+            )
+        }
     }
 
     fun getProperties() {
         safeLaunch {
-            propertyListUseCase()
-                .onEach { data ->
-//                    updateUiSuccessState {
-//                        currentScreenState.successData.copy(
-//                            propertyListState = data
-//                        )
-//                    }
-                }
-                .catch { e -> e.printStackTrace() }
-                .launchIn(viewModelScope)
+            propertyListUseCase(this) { state ->
+                updateUiState { state }
+            }
         }
+    }
+
+    fun onFabClicked() {
+        showToast(message = "from FAB", duration = Toast.LENGTH_LONG)
+        reverseList()
     }
 }

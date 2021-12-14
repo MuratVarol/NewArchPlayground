@@ -17,7 +17,7 @@ import com.google.accompanist.placeholder.placeholder
 
 
 @Composable
-private fun ConstraintLayoutScope.addImage(
+fun ConstraintLayoutScope.addImage(
     url: String,
     isLoading: Boolean
 ): ConstrainedLayoutReference {

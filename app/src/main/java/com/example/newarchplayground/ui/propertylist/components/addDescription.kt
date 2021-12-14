@@ -20,7 +20,7 @@ import com.google.accompanist.placeholder.placeholder
 
 
 @Composable
-private fun ConstraintLayoutScope.addDescription(
+fun ConstraintLayoutScope.addDescription(
     title: ConstrainedLayoutReference,
     image: ConstrainedLayoutReference,
     descriptionText: String?,

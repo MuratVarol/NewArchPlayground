@@ -1,7 +1,5 @@
-package com.example.newarchplayground.ui.delegate
+package com.example.newarchplayground.ui.delegate.snackbar
 
-import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
-import com.example.newarchplayground.ui.delegate.snackbar.SnackBarState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

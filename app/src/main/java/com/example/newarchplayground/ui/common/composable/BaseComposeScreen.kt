@@ -10,35 +10,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import com.example.newarchplayground.ui.common.BaseSateViewModel
+import com.example.newarchplayground.ui.common.BaseStateViewModel
 import com.example.newarchplayground.ui.common.UiState
-import com.example.newarchplayground.ui.sample.BaseViewModel
 import com.example.newarchplayground.util.lifecycleAwareState
 
-@Composable
-fun <STATE, VM : BaseViewModel<STATE>> BaseComposeScreen(
-    scaffoldState: ScaffoldState,
-    viewModel: VM,
-    render: @Composable () -> Unit
-) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    HandleSnackBarIfSupported(lifecycleOwner, viewModel, scaffoldState.snackbarHostState)
-    render()
-}
 
 @Composable
-fun <STATE, VM : BaseSateViewModel<STATE>> BaseComposeScreen2(
+fun <STATE, VM : BaseStateViewModel<STATE>> BaseComposeScreen(
     scaffoldState: ScaffoldState,
     viewModel: VM,
-    renderOnLoading: @Composable () -> Unit = {
-        LoadingScreen()
-    },
-    renderOnFailure: @Composable () -> Unit = {
-        FailureScreen()
-    },
+    renderOnLoading: @Composable () -> Unit = { LoadingScreen() },
+    renderOnFailure: @Composable () -> Unit = { FailureScreen() },
     renderOnSuccess: @Composable (state: UiState<STATE>) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
+
     HandleSnackBarIfSupported(
         lifecycleOwner = lifecycleOwner,
         viewModel = viewModel,

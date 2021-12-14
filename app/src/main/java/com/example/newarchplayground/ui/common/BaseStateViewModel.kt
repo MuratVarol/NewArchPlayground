@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-abstract class BaseSateViewModel<State>(
+abstract class BaseStateViewModel<State>(
     val initialState: UiState<State> = UiState.Loading,
 ) : ViewModel() {
 
