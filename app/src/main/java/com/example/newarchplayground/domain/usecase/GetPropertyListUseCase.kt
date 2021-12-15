@@ -1,25 +1,26 @@
 package com.example.newarchplayground.domain.usecase
 
 import com.example.newarchplayground.PropertyUiModel
+import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.repository.PropertyRepositoryImp
-import com.example.newarchplayground.data.usecase.IUseCase
+import com.example.newarchplayground.data.util.Failure
 import com.example.newarchplayground.ui.common.UiState
-import com.example.newarchplayground.ui.delegate.mapper.IUiStateMap
-import com.example.newarchplayground.ui.delegate.mapper.UiStateMapImpl
 import com.example.newarchplayground.ui.propertylist.MainScreenState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class GetPropertyListUseCase @Inject constructor(
     private val repo: PropertyRepositoryImp
-) : IUseCase<List<PropertyUiModel>?, MainScreenState>, IUiStateMap by UiStateMapImpl() {
+) : IUseCase2<List<PropertyUiModel>?> {
 
-    override suspend fun invoke(
-        scope: CoroutineScope,
-        stateCallback: (UiState<MainScreenState>) -> Unit
-    ) {
-        repo.getProperties().mapUiState(scope, stateCallback) {
-            MainScreenState(propertyList = it ?: emptyList())
-        }
+    override suspend fun invoke(): Flow<DataResult<Failure, List<PropertyUiModel>?>> {
+        return repo.getProperties()
     }
+}
+
+interface IUseCase2<DATA> {
+    suspend operator fun invoke(): Flow<DataResult<Failure, DATA>>
 }
