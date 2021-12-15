@@ -1,15 +1,12 @@
 package com.example.newarchplayground.ui.sample
 
 import com.example.newarchplayground.data.usecase.SampleUseCase
-import com.example.newarchplayground.ui.common.BaseStateViewModel
+import com.example.newarchplayground.ui.common.BaseViewModel
 import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.delegate.snackbar.SnackbarControllerImpl
-import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
-import com.example.newarchplayground.ui.delegate.snackbar.ISnackBarController
-import com.example.newarchplayground.ui.delegate.toast.IToastController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 
@@ -20,8 +17,7 @@ data class SampleUIState(
 @HiltViewModel
 class SampleViewModel @Inject constructor(
     private val sampleUseCase: SampleUseCase
-) : BaseStateViewModel<SampleUIState>(initialState = UiState.Loading),
-    ISnackBarController by SnackbarControllerImpl(), IToastController by ToastControllerImpl() {
+) : BaseViewModel<SampleUIState>() {
 
     init {
         loadList()
@@ -30,8 +26,20 @@ class SampleViewModel @Inject constructor(
     private fun loadList() {
         safeLaunch {
             delay(2000)
-            sampleUseCase.invoke(this) { state ->
-                updateUiState { state }
+            sampleUseCase().onEach{
+                it.either(
+                    fnLoading = {},
+                    fnError = {},
+                    fnSuccess = { list ->
+                        updateUiState(
+                            UiState.Success(
+                                currentState.successData.copy(
+                                    list = list
+                                )
+                            )
+                        )
+                    }
+                )
             }
         }
     }
@@ -40,14 +48,14 @@ class SampleViewModel @Inject constructor(
         val currentList = currentState.successData.list.toMutableList()
         currentList.remove(text)
 
-        updateUiState {
+        updateUiState (
             UiState.Success(
                 currentState.successData.copy(
                     list = currentList
                 )
             )
-        }
-        showToast("$text is deleted!",)
+        )
+        showToast("$text is deleted!")
         if (currentList.isEmpty()) showSnackBar("List is empty!")
     }
 }

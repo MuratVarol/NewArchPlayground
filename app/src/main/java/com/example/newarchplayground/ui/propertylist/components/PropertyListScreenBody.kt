@@ -25,6 +25,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun PropertyListScreenBody(
     onRefresh: () -> Unit,
     onFabClick: () -> Unit,
+    onCardClick: (String) -> Unit,
     propertyList: List<PropertyUiModel>,
     isRefreshing: Boolean
 ) {
@@ -47,7 +48,7 @@ fun PropertyListScreenBody(
                     .padding(top = 8.dp),
             ) {
                 items(propertyList) { item ->
-                    PropertyListItem(property = item, false)
+                    PropertyListItem(property = item, onCardClick = onCardClick, isLoading = false)
                 }
             }
         }

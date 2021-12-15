@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun SampleScreenBody2(list: List<String>, onClick: (String) -> Unit) {
+fun SampleScreenBody(list: List<String>, onClick: (String) -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier

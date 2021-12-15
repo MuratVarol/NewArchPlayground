@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.newarchplayground.PropertyUiModel
 import com.example.newarchplayground.ui.common.composable.BaseComposeScreen
 import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.propertylist.components.PropertyListItem
@@ -40,7 +39,7 @@ fun PropertyListScreen(scaffoldState: ScaffoldState) {
                     .padding(top = 8.dp),
             ) {
                 items(loadingList) {
-                    PropertyListItem(property = PropertyUiModel("", "", "", ""), true)
+                    PropertyListItem(isLoading = true)
                 }
             }
         }
@@ -48,8 +47,9 @@ fun PropertyListScreen(scaffoldState: ScaffoldState) {
         PropertyListScreenBody(
             onRefresh = { viewModel.onRefresh() },
             onFabClick = { viewModel.onFabClicked() },
-            isRefreshing = state.successData.isRefreshing,
-            propertyList = state.successData.propertyList
+            onCardClick = { viewModel.onCardClick(it) },
+            isRefreshing = state.isSwipeRefreshing,
+            propertyList = state.propertyList
         )
     }
 }

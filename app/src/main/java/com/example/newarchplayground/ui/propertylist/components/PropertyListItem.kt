@@ -8,19 +8,17 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.newarchplayground.PropertyUiModel
 import com.example.newarchplayground.ui.theme.Shapes
-import com.example.newarchplayground.util.extensions.longToast
 
 @Composable
 fun PropertyListItem(
-    property: PropertyUiModel?,
+    property: PropertyUiModel? = null,
+    onCardClick: (String) -> Unit = {},
     isLoading: Boolean
 ) {
-    val context = LocalContext.current
     Card(
         shape = Shapes.medium,
         elevation = 8.dp,
@@ -29,7 +27,9 @@ fun PropertyListItem(
             .fillMaxWidth()
             .wrapContentHeight()
             .clickable(
-                onClick = { context.longToast(property?.name) }
+                onClick = {
+                    if (!isLoading) onCardClick(property?.name ?: "")
+                }
             ),
         backgroundColor = Color.White
     ) {

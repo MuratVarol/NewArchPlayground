@@ -1,27 +1,30 @@
 package com.example.newarchplayground.ui.propertylist
 
 import android.widget.Toast
+import androidx.lifecycle.viewModelScope
 import com.example.newarchplayground.PropertyUiModel
+import com.example.newarchplayground.data.repository.PropertyRepositoryImp
 import com.example.newarchplayground.domain.usecase.GetPropertyListUseCase
-import com.example.newarchplayground.ui.common.BaseStateViewModel
+import com.example.newarchplayground.ui.common.BaseViewModel
 import com.example.newarchplayground.ui.common.UiState
 import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.delegate.toast.IToastController
-import com.example.newarchplayground.ui.delegate.toast.ToastControllerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 
 data class MainScreenState(
     val propertyList: List<PropertyUiModel> = emptyList(),
-    val isRefreshing: Boolean = false
+    val isSwipeRefreshing: Boolean = false
 )
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val propertyListUseCase: GetPropertyListUseCase
-) : BaseStateViewModel<MainScreenState>(), IToastController by ToastControllerImpl() {
+    private val propertyListUseCase: GetPropertyListUseCase,
+    private val repo: PropertyRepositoryImp
+) : BaseViewModel<MainScreenState>() {
 
     init {
         getProperties()
@@ -30,9 +33,17 @@ class MainViewModel @Inject constructor(
     private fun getProperties() {
         safeLaunch {
             delay(2000)
-            propertyListUseCase(this) { state ->
-                updateUiState { state }
-            }
+            repo.getProperties().onEach {
+                it.either(
+                    fnLoading = {},
+                    fnSuccess = { propList ->
+                        updateUiState(
+                            UiState.Success(MainScreenState(propertyList = propList ?: emptyList()))
+                        )
+                    },
+                    fnError = {}
+                )
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -50,28 +61,32 @@ class MainViewModel @Inject constructor(
             )
         )
         list.reversed()
-        updateUiState {
+        updateUiState(
             UiState.Success(
                 currentState.successData.copy(
                     propertyList = list
                 )
             )
-        }
+        )
     }
 
     fun onRefresh() {
-        updateUiState {
+        updateUiState(
             UiState.Success(
-                it.successData.copy(
-                    isRefreshing = true
+                currentState.successData.copy(
+                    isSwipeRefreshing = true
                 )
             )
-        }
+        )
         getProperties()
     }
 
     fun onFabClicked() {
         showToast(message = "from FAB", duration = Toast.LENGTH_LONG)
         reverseList()
+    }
+
+    fun onCardClick(name: String) {
+        showToast(name)
     }
 }

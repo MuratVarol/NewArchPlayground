@@ -3,27 +3,17 @@ package com.example.newarchplayground.data.usecase
 import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.common.ResultAlias
 import com.example.newarchplayground.data.util.Failure
-import com.example.newarchplayground.ui.common.UiState
-import com.example.newarchplayground.ui.delegate.mapper.IUiStateMap
-import com.example.newarchplayground.ui.delegate.mapper.UiStateMapImpl
-import com.example.newarchplayground.ui.sample.SampleUIState
-import kotlinx.coroutines.CoroutineScope
+import com.example.newarchplayground.domain.usecase.IUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import kotlin.random.Random
 
 
-class SampleUseCase @Inject constructor() : IUseCase<List<String>, SampleUIState>,
-    IUiStateMap by UiStateMapImpl() {
+class SampleUseCase @Inject constructor() : IUseCase<List<String>> {
 
-    override suspend fun invoke(
-        scope: CoroutineScope,
-        stateCallback: (UiState<SampleUIState>) -> Unit
-    ) {
-        flow<ResultAlias<List<String>>> {
+    override suspend fun invoke(): Flow<DataResult<Failure, List<String>>> {
+        return flow<ResultAlias<List<String>>> {
             emit(DataResult.Loading)
             val list = mutableListOf<String>().apply {
                 repeat(4) {
@@ -31,12 +21,6 @@ class SampleUseCase @Inject constructor() : IUseCase<List<String>, SampleUIState
                 }
             }
             emit(DataResult.Success(list))
-        }.mapUiState(scope, stateCallback, mapOnSuccess = {
-            SampleUIState(list = it)
-        })
+        }
     }
-}
-
-interface IUseCase<DATA, RESULT> {
-    suspend operator fun invoke(scope: CoroutineScope, stateCallback: (UiState<RESULT>) -> Unit)
 }

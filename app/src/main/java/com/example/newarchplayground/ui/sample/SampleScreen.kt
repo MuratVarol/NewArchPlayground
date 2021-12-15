@@ -5,8 +5,7 @@ import androidx.compose.material.ScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newarchplayground.ui.common.composable.BaseComposeScreen
-import com.example.newarchplayground.ui.common.successData
-import com.example.newarchplayground.ui.sample.components.SampleScreenBody2
+import com.example.newarchplayground.ui.sample.components.SampleScreenBody
 
 
 @Composable
@@ -19,8 +18,8 @@ fun SampleScreen(
         viewModel = viewModel
     ) { state ->
         Scaffold {
-            SampleScreenBody2(
-                list = state.successData.list,
+            SampleScreenBody(
+                list = state.list,
                 onClick = viewModel.onSampleButtonClick
             )
         }
