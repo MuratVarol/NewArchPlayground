@@ -37,7 +37,7 @@ class MainViewModel @Inject constructor(
                 it.either(
                     fnLoading = {},
                     fnSuccess = { propList ->
-                        updateUiState(
+                        setUiState(
                             UiState.Success(MainScreenState(propertyList = propList ?: emptyList()))
                         )
                     },
@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
             )
         )
         list.reversed()
-        updateUiState(
+        setUiState(
             UiState.Success(
                 currentState.successData.copy(
                     propertyList = list
@@ -71,13 +71,11 @@ class MainViewModel @Inject constructor(
     }
 
     fun onRefresh() {
-        updateUiState(
-            UiState.Success(
-                currentState.successData.copy(
-                    isSwipeRefreshing = true
-                )
+        updateSuccessUiState {
+            it.copy(
+                isSwipeRefreshing = true
             )
-        )
+        }
         getProperties()
     }
 

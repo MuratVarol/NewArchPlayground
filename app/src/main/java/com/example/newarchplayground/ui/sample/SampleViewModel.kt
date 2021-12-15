@@ -31,7 +31,7 @@ class SampleViewModel @Inject constructor(
                     fnLoading = {},
                     fnError = {},
                     fnSuccess = { list ->
-                        updateUiState(
+                        setUiState(
                             UiState.Success(
                                 currentState.successData.copy(
                                     list = list
@@ -48,7 +48,7 @@ class SampleViewModel @Inject constructor(
         val currentList = currentState.successData.list.toMutableList()
         currentList.remove(text)
 
-        updateUiState (
+        setUiState (
             UiState.Success(
                 currentState.successData.copy(
                     list = currentList

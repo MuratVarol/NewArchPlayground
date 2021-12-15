@@ -47,10 +47,14 @@ abstract class BaseViewModel<State>(
         Timber.e(exception, COROUTINE_EXCEPTION_HANDLER_MESSAGE)
     }
 
-    fun updateUiState(state: UiState<State>) {
+    fun setUiState(state: UiState<State>) {
         _uiState.update {
             state
         }
+    }
+
+    fun updateSuccessUiState(updateState: (State) -> State) {
+        _uiState.update { UiState.Success(updateState(currentState.successData)) }
     }
 
     protected fun safeLaunch(block: suspend CoroutineScope.() -> Unit) {
