@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.newarchplayground.ui.common.composable.BaseComposeScreen
-import com.example.newarchplayground.ui.common.successData
 import com.example.newarchplayground.ui.propertylist.components.PropertyListItem
 import com.example.newarchplayground.ui.propertylist.components.PropertyListScreenBody
 
