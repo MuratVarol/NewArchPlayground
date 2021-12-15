@@ -4,6 +4,7 @@ import com.example.newarchplayground.PropertyUiModel
 import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.repository.PropertyRepositoryImp
 import com.example.newarchplayground.data.util.Failure
+import com.example.newarchplayground.ui.common.IUseCase
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -14,8 +15,4 @@ class GetPropertyListUseCase @Inject constructor(
     override suspend fun invoke(): Flow<DataResult<Failure, List<PropertyUiModel>?>> {
         return repo.getProperties()
     }
-}
-
-interface IUseCase<DATA> {
-    suspend operator fun invoke(): Flow<DataResult<Failure, DATA>>
 }

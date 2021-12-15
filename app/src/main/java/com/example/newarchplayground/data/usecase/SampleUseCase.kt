@@ -3,7 +3,7 @@ package com.example.newarchplayground.data.usecase
 import com.example.newarchplayground.data.common.DataResult
 import com.example.newarchplayground.data.common.ResultAlias
 import com.example.newarchplayground.data.util.Failure
-import com.example.newarchplayground.domain.usecase.IUseCase
+import com.example.newarchplayground.ui.common.IUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
